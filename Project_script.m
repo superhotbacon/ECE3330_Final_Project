@@ -12,28 +12,39 @@ t = (0:L-1)*T;
 fn = fs / 2; %this is the nyquest sampling maximum frequency
 
 
-dB = 20*log10(abs(data_fft));
+%dB = 20*log10(abs(data_fft));
 
 
-%fs = 96000;
+
 
 fc = 1200;
 
 [b,a] = butter(6,fc/(fs/2), 'low');
-dataOut = filter(b,a,data_fft);
+dataOut = filter(b,a,data);
 
-X = abs(ifft(dataOut));
+dataOut_fft = abs(fft(dataOut));
+dataOut_fft_dB = 20*log10(abs(fft(dataOut)));
 
 
+%sound(dataOut,fs);
 
-
-sound(X,fs);
 figure(1)
-plot(fs/L*(0:L-1)/1000,X,"LineWidth",1)
-title("Complex Magnitude of fft Spectrum")
+x = fs/L*(0:L-1)/1000;
+plot(x,dataOut_fft,"LineWidth",1)
+xlim([0 20]);
+title("Complex Magnitude in Frequency Spectrum")
+xlabel("f (kHz)")
+ylabel("|fft(X)|dB")
+
+figure(2)
+x = fs/L*(0:L-1)/1000; %sampling freq / 
+plot(x,dataOut_fft_dB,"LineWidth",1)
+xlim([0 20]);
+title("Output data in dB")
 xlabel("f (kHz)")
 ylabel("|fft(X)|dB")
 
 
-figure(2)
+%plot(fs/L*(0:L-1)/1000,X,"LineWidth",1)
+figure(3)
 freqz(b,a)

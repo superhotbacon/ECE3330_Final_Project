@@ -1,4 +1,9 @@
-[data, fs] = audioread('MahoganyHallStompLouisArmstrong.wav');
+[data, fs] = audioread('CrackTheSkye.wav');
+data_fft = fft(data);
+
+original = ifft(data_fft);
+%sound(original,fs);
+
 
 T = 1/fs; %sampling period
 L = size(data);
@@ -6,22 +11,30 @@ L = L(1); %only care about first column which tells the amt of samples
 t = (0:L-1)*T;
 fn = fs / 2; %this is the nyquest sampling maximum frequency
 
-data_fft = fft(data);
-dB = 20*log10(abs(data_fft));
+
+%dB = 20*log10(abs(data_fft));
 
 
-fs = 96000;
 
-fc = 50;
 
-[b,a] = butter(10,fc/(fs/2));
-dataOut = filter(b,a,data_fft);
+fc = 1200;
 
-X = abs(ifft(dataOut));
-Z = abs(ifft(data_fft));
+[b,a] = butter(6,fc/(fs/2), 'low');
+dataOut = filter(b,a,data);
 
-sound(X,fs/2);
+%X = abs(fft(dataOut));
+X = 20*log10(abs(fft(dataOut)));
+
+
+
+%sound(dataOut,fs);
+figure(1)
 plot(fs/L*(0:L-1)/1000,X,"LineWidth",1)
+lim = axis;
 title("Complex Magnitude of fft Spectrum")
 xlabel("f (kHz)")
 ylabel("|fft(X)|dB")
+
+%plot(fs/L*(0:L-1)/1000,X,"LineWidth",1)
+figure(2)
+freqz(b,a)
