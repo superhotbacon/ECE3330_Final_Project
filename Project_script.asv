@@ -4,13 +4,15 @@ T = 1/fs; %sampling period
 L = size(data);
 L = L(1); %only care about first column which tells the amt of samples
 t = (0:L-1)*T;
-fn = fs / 2; %this is the nyquest sampling maximum frequency
 
+%data_fft = fft(data);
+%plot(abs(data_fft(:,:)));
+%title('test-FFT');
 
-plot(fs/L*(0:L-1),20*log(abs(data_fft)),"LineWidth",1)
+plot(fs/L*(0:L-1),abs(data_fft),"LineWidth",1)
 title("Complex Magnitude of fft Spectrum")
 xlabel("f (Hz)")
-ylabel("|fft(X)|dB")
+ylabel("|fft(X)|")
 
 
 %plot(data(:,:))
