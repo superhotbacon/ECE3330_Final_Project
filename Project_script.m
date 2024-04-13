@@ -1,4 +1,4 @@
-[data, fs] = audioread('CrackTheSkye.wav');
+[data, fs] = audioread('MahoganyHallStompLouisArmstrong.wav');
 data_fft = fft(data);
 
 original = ifft(data_fft);
@@ -26,12 +26,14 @@ dataOut_fft = abs(fft(dataOut));
 dataOut_fft_dB = 20*log10(abs(fft(dataOut)));
 
 
-%sound(dataOut,fs);
+sound(dataOut,fs);
 
 figure(1)
 x = fs/L*(0:L-1)/1000;
 plot(x,dataOut_fft,"LineWidth",1)
-xlim([0 20]);
+hold on
+grid on;
+xlim([0 22]);
 title("Complex Magnitude in Frequency Spectrum")
 xlabel("f (kHz)")
 ylabel("|fft(X)|dB")
@@ -39,12 +41,16 @@ ylabel("|fft(X)|dB")
 figure(2)
 x = fs/L*(0:L-1)/1000; %sampling freq / 
 plot(x,dataOut_fft_dB,"LineWidth",1)
-xlim([0 20]);
+grid on;
+xlim([0 22]);
 title("Output data in dB")
 xlabel("f (kHz)")
 ylabel("|fft(X)|dB")
 
-
+%the line below only plots half the data, cutting out the higher harmonic 
+%that gets repeated because of the nyquest sampling theorem
+%plot(x(1:length(x)/2),dataOut_fft_dB(1:length(dataOut_fft_dB)/2),"LineWidth",1)
 %plot(fs/L*(0:L-1)/1000,X,"LineWidth",1)
 figure(3)
 freqz(b,a)
+grid on;
