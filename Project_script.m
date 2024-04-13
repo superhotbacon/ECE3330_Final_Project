@@ -1,3 +1,5 @@
+clear all; close all;clc;
+
 [data, fs] = audioread('CrackTheSkye.mp3');
 data_fft = abs(fft(data));
 
