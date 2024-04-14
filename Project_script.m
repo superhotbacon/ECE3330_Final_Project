@@ -1,8 +1,8 @@
 clear all; close all;clc;
 
-[data, fs] = audioread('CrackTheSkye.mp3');
+[data, fs] = audioread('CrackTheSkye.wav');
 data_fft = abs(fft(data));
-
+data_fft_dB = 20*log10(data_fft);
 original = ifft(data_fft);
 %sound(original,fs);
 
@@ -21,14 +21,14 @@ fn = fs / 2; %this is the nyquest sampling maximum frequency
 
 fc = 1200;
 
-[b,a] = butter(6,fc/(fs/2), 'low');
+[b,a] = butter(12,fc/(fs/2), 'low');
 dataOut = filter(b,a,data);
 
 dataOut_fft = abs(fft(dataOut));
 dataOut_fft_dB = 20*log10(abs(fft(dataOut)));
 
 
-%sound(dataOut,fs);
+sound(dataOut,fs);
 
 figure(1)
 subplot(2,1,1)
@@ -50,11 +50,21 @@ ylabel("|fft(X)|")
 
 
 figure(2)
+subplot(2,1,1)
 x = fs/L*(0:L-1)/1000; %sampling freq / 
 plot(x,dataOut_fft_dB,"LineWidth",1)
 grid on;
 xlim([0 6]);
 title("Output data in dB")
+xlabel("f (kHz)")
+ylabel("|fft(X)|dB")
+
+subplot(2,1,2)
+x = fs/L*(0:L-1)/1000; %sampling freq / 
+plot(x,data_fft_dB,"LineWidth",1)
+grid on;
+xlim([0 6]);
+title("input data in dB")
 xlabel("f (kHz)")
 ylabel("|fft(X)|dB")
 
