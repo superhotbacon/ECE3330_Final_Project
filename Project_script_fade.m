@@ -1,6 +1,6 @@
 clear all; close all;clc;
 
-[data, fs] = audioread('Music\CrackTheSkye.wav');
+[data, fs] = audioread('Music\RagtimeDontStarve.wav');
 data_fft = abs(fft(data));
 data_fft_dB = 20*log10(data_fft);
 original = ifft(data_fft);
@@ -13,14 +13,14 @@ L = L(1); %only care about first column which tells the amt of samples
 t = (0:L-1)*T;
 fn = fs / 2; %this is the nyquest sampling maximum frequency
 
-t_cutin = 7; %in seconds
+t_cutin =20; %in seconds
 samples_per_segment = 100;
 
 num_samples = (t_cutin * fs);
 
 data_cutIn = data(1:num_samples,:); %data for number of 
 %samples needing to be filterd
-fc_start = 100;
+fc_start = 200;
 fc_end = 22000;
 %FOR LINEAR INCREMENT
 %fc_increment = (fc_end - fc_start)/(num_samples/samples_per_segment);
@@ -49,7 +49,7 @@ k = 1; %implement this
 segment_nums(1:(num_segments)) = (1:1:num_segments);
 a = (fc_end-fc_start)/((num_segments-1)^2);%a value for quad equation
 %quadratic equation of fc_increment
-fc_increment(1:(num_segments)) = a.*(segment_nums(1:num_segments)).^2;
+fc_increment(1:(num_segments)) = a.*(segment_nums(1:num_segments)).^2 + fc_start; 
     %k*(segment_nums.^2 - segment_nums.*(1 + num_segments) + 1*num_segments); %using num_segments as 'x' value 
 
 %first filter assignment
