@@ -13,10 +13,10 @@ L = L(1); %only care about first column which tells the amt of samples
 t = (0:L-1)*T;
 fn = fs / 2; %this is the nyquest sampling maximum frequency
 
-t_cutin =7; %in seconds
-samples_per_segment = 100;
+t_delta = 15; %in seconds
+samples_per_segment = 1000;
 
-num_samples = (t_cutin * fs);
+num_samples = (t_delta * fs);
 
 data_cutIn = data(1:num_samples,:); %data for number of 
 %samples needing to be filterd
@@ -49,7 +49,7 @@ k = 1; %implement this
 segment_nums(1:(num_segments)) = (1:1:num_segments);
 a = (fc_end-fc_start)/((num_segments-1)^2);%a value for quad equation
 %quadratic equation of fc_increment
-fc_increment(1:(num_segments)) = a.*(segment_nums(1:num_segments)).^2;
+fc_increment(1:(num_segments)) = a.*(segment_nums(1:num_segments)).^2 + fc_start; 
     %k*(segment_nums.^2 - segment_nums.*(1 + num_segments) + 1*num_segments); %using num_segments as 'x' value 
 
 %first filter assignment
@@ -67,16 +67,11 @@ end
 
 
 
-dataOut = [data_out_cutIn(:,:); data(t_cutin*fs:L,:)];%cconacntoante it 
+dataOut = [data_out_cutIn(:,:); data(t_delta*fs:L,:)];%cconacntoante it 
 %data(num_samples+samples_per_segment*2 is needed for an array offset
 
 dataOut_fft = abs(fft(dataOut));
 dataOut_fft_dB = 20*log10(abs(fft(dataOut)));
-
-
-
-
-
 
 sound(dataOut,fs);
 

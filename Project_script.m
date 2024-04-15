@@ -1,6 +1,6 @@
 clear all; close all;clc;
 
-[data, fs] = audioread('CrackTheSkye.wav');
+[data, fs] = audioread('Music\MahoganyHallStompLouisArmstrong.wav');
 data_fft = abs(fft(data));
 data_fft_dB = 20*log10(data_fft);
 original = ifft(data_fft);
@@ -19,7 +19,7 @@ fn = fs / 2; %this is the nyquest sampling maximum frequency
 
 
 
-fc = 1200;
+fc = 1000;
 
 [b,a] = butter(12,fc/(fs/2), 'low');
 dataOut = filter(b,a,data);
