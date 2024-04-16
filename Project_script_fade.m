@@ -1,6 +1,6 @@
 clear all; close all;clc;
 
-[data, fs] = audioread('Music\Halloween.wav');
+[data, fs] = audioread('Music\CrackTheSkye.wav');
 data_fft = abs(fft(data));
 data_fft_dB = 20*log10(data_fft);
 original = ifft(data_fft);
@@ -12,9 +12,10 @@ L = size(data);
 L = L(1); %only care about first column which tells the amt of samples
 t = (0:L-1)*T;
 fn = fs / 2; %this is the nyquest sampling maximum frequency
+filename = 'Music\Output\CrackTheSkyeFadeIn.mp3';
 
-t_delta = 17; %in seconds
-samples_per_segment = 9000;
+t_delta = 5; %in seconds
+samples_per_segment = 20;
 % ^the higher this value the less pop noise you get during 
 % the for loop. But dont make it too high or else it will sound choppy
 
@@ -76,7 +77,7 @@ dataOut_fft = abs(fft(dataOut));
 dataOut_fft_dB = 20*log10(abs(fft(dataOut)));
 
 sound(dataOut,fs);
-
+audiowrite(filename,dataOut,fs);
 
 figure(1)
 subplot(2,1,1)

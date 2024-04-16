@@ -5,7 +5,7 @@ data_fft = abs(fft(data));
 data_fft_dB = 20*log10(data_fft);
 original = ifft(data_fft);
 %sound(original,fs);
-
+filename = 'Music\Output\MahoganyLowPassEx.wav';
 
 T = 1/fs; %sampling period
 L = size(data);
@@ -21,7 +21,7 @@ fn = fs / 2; %this is the nyquest sampling maximum frequency
 
 fc = 1000;
 
-[b,a] = butter(12,fc/(fs/2), 'low');
+[b,a] = butter(6,fc/(fs/2), 'low');
 dataOut = filter(b,a,data);
 
 dataOut_fft = abs(fft(dataOut));
@@ -29,6 +29,8 @@ dataOut_fft_dB = 20*log10(abs(fft(dataOut)));
 
 
 sound(dataOut,fs);
+audiowrite(filename,dataOut,fs);
+
 
 figure(1)
 subplot(2,1,1)
@@ -49,24 +51,30 @@ xlabel("f (kHz)")
 ylabel("|fft(X)|")
 
 
+
 figure(2)
 subplot(2,1,1)
+
 x = fs/L*(0:L-1)/1000; %sampling freq / 
-plot(x,dataOut_fft_dB,"LineWidth",1)
+plot(x,data_fft_dB,"LineWidth",1)
 grid on;
-xlim([0 6]);
-title("Output data in dB")
+xlim([0 22]);
+title("input data in dB")
 xlabel("f (kHz)")
 ylabel("|fft(X)|dB")
 
 subplot(2,1,2)
 x = fs/L*(0:L-1)/1000; %sampling freq / 
-plot(x,data_fft_dB,"LineWidth",1)
+plot(x,dataOut_fft_dB,"LineWidth",1)
 grid on;
-xlim([0 6]);
-title("input data in dB")
+xlim([0 22]);
+title("Output data in dB")
 xlabel("f (kHz)")
 ylabel("|fft(X)|dB")
+
+
+
+
 
 %the line below only plots half the data, cutting out the higher harmonic 
 %that gets repeated because of the nyquest sampling theorem
