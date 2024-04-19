@@ -1,6 +1,6 @@
 clear all; close all;clc;
 
-[data, fs] = audioread('Music\CrackTheSkye.wav');
+[data, fs] = audioread('Music\HighRoad.mp3');
 data_fft = abs(fft(data));
 data_fft_dB = 20*log10(data_fft);
 original = ifft(data_fft);
@@ -12,10 +12,10 @@ L = size(data);
 L = L(1); %only care about first column which tells the amt of samples
 t = (0:L-1)*T;
 fn = fs / 2; %this is the nyquest sampling maximum frequency
-filename = 'Music\Output\CrackTheSkyeFadeIn.mp3';
+filename = 'Music\Output\HighRoadOutput.mp3';
 
-t_delta = 5; %in seconds
-samples_per_segment = 20;
+t_delta = 10; %in seconds
+samples_per_segment = 200;
 % ^the higher this value the less pop noise you get during 
 % the for loop. But dont make it too high or else it will sound choppy
 
@@ -24,7 +24,7 @@ num_samples = (t_delta * fs);
 data_cutIn = data(1:num_samples,:); %data for number of 
 %samples needing to be filterd
 fc_start = 200;
-fc_end = 20000;
+fc_end = 22000;
 %FOR LINEAR INCREMENT
 %fc_increment = (fc_end - fc_start)/(num_samples/samples_per_segment);
 
@@ -48,7 +48,6 @@ end
 %quadratic increment
 num_segments = floor(num_samples/samples_per_segment);
 %scalar value
-k = 1; %implement this
 segment_nums(1:(num_segments)) = (1:1:num_segments);
 a = (fc_end-fc_start)/((num_segments-1)^2);%a value for quad equation
 %quadratic equation of fc_increment
@@ -61,10 +60,13 @@ fc_increment(1:(num_segments)) = a.*(segment_nums(1:num_segments)).^2 + fc_start
     filter(b,a,data_cutIn(1:samples_per_segment,:));
 
 fc_current =  fc_increment(1);
-for sample_seg = 1:1:num_segments -1
+for sample_seg = 2:1:num_segments -1
     [b,a] = butter(6,(fc_current)/(fs/2), 'low');
-    [data_out_cutIn(samples_per_segment*sample_seg:samples_per_segment*(sample_seg+1),:),zf] = filter(b,a,data_cutIn(samples_per_segment*sample_seg:samples_per_segment*(sample_seg+1),:),zf);
-    
+    [data_out_cutIn(samples_per_segment*sample_seg+1:samples_per_segment*(sample_seg+1),:),zf]...
+    = filter(b,a,data_cutIn(samples_per_segment*sample_seg+1:samples_per_segment*(sample_seg+1),:),zf);
+    %samples_per_segment*sample_seg+1 is nessesary to prevent
+    %the for loop from filtering the same sample twice, 
+    %prevents popping noise
     fc_current = fc_increment(sample_seg);
 end
 
