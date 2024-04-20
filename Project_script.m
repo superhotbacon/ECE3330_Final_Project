@@ -13,9 +13,9 @@ L = L(1); %only care about first column which tells the amt of samples
 t = (0:L-1)*T;
 fn = fs / 2; %this is the nyquest sampling maximum frequency
 
-fc = 1200;
+fc = 3000;
 
-[b,a] = butter(6,fc/(fs/2), 'low');
+[b,a] = butter(6,fc/(fs/2), 'high');
 dataOut = filter(b,a,data);
 
 dataOut_fft = abs(fft(dataOut));
@@ -44,8 +44,6 @@ title("Complex Magnitude of output data in Frequency Spectrum")
 xlabel("f (kHz)")
 ylabel("|fft(X)|")
 
-
-
 figure(2)
 subplot(2,1,1)
 
@@ -65,9 +63,6 @@ xlim([0 22]);
 title("Output data in dB")
 xlabel("f (kHz)")
 ylabel("|fft(X)|dB")
-
-
-
 
 
 %the line below only plots half the data, cutting out the higher harmonic 
