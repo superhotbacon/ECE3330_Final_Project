@@ -1,6 +1,6 @@
 clear all; close all;clc;
 
-[data, fs] = audioread('Music\HighRoad.mp3');
+[data, fs] = audioread('Music\MahoganyHallStompLouisArmstrong.wav');
 data_fft = abs(fft(data));
 data_fft_dB = 20*log10(data_fft);
 original = ifft(data_fft);
@@ -13,9 +13,9 @@ L = L(1); %only care about first column which tells the amt of samples
 t = (0:L-1)*T;
 fn = fs / 2; %this is the nyquest sampling maximum frequency
 
-fc = 3000;
+fc = 1000;
 
-[b,a] = butter(6,fc/(fs/2), 'high');
+[b,a] = butter(6,fc/(fs/2), 'low');
 dataOut = filter(b,a,data);
 
 dataOut_fft = abs(fft(dataOut));
@@ -71,4 +71,5 @@ ylabel("|fft(X)|dB")
 %plot(fs/L*(0:L-1)/1000,X,"LineWidth",1)
 figure(3)
 freqz(b,a)
+%from 0 to the nyquest frequency
 grid on;
