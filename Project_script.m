@@ -1,11 +1,11 @@
 clear all; close all;clc;
 
-[data, fs] = audioread('Music\MahoganyHallStompLouisArmstrong.wav');
+[data, fs] = audioread('Music\VINSKY V3.wav');
 data_fft = abs(fft(data));
 data_fft_dB = 20*log10(data_fft);
 original = ifft(data_fft);
 %sound(original,fs);
-filename = 'Music\Output\HighRoadLowPass.mp3';
+filename = 'Music\Output\VNSKYOUT.mp3';
 
 T = 1/fs; %sampling period
 L = size(data);
@@ -13,7 +13,7 @@ L = L(1); %only care about first column which tells the amt of samples
 t = (0:L-1)*T;
 fn = fs / 2; %this is the nyquest sampling maximum frequency
 
-fc = 1000;
+fc = 22000;
 
 [b,a] = butter(6,fc/(fs/2), 'low');
 dataOut = filter(b,a,data);
